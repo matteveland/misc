@@ -1,3 +1,6 @@
+'''
+This is for estimates only. No claims at being accurate for tax purposed. 
+'''
 states = {
     "AL": {9999999999999999999: 0.0},
     "AK": "",
