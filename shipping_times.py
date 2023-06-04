@@ -14,64 +14,145 @@ weekdays = {
 
 
 def main():
-    print(shipping_times())
+    shipping_times()
+    # print(shipping_times("2023-06-23", "15"))
 
 
 def shipping_times():
-    now = datetime.datetime.now()
-    current_hour = 13  # now.strftime("%H")
-    today = datetime.date.today()
+    now = datetime.datetime.now()  # "2023-06-16 15:47:20.799617"
+    current_hour = now.strftime("%H")  # hour  # 14
+    today = datetime.date.today()  # today
+    # format = "%Y-%m-%d"
+    # today = datetime.datetime.strptime(today, format)
+
     us_holidays = holidays.country_holidays("US")
     tomorrow_date = today + datetime.timedelta(days=1)
+
     tomorrow_day = tomorrow_date.isoweekday()
     next_week_date = today + datetime.timedelta(days=3)
     next_week_day = tomorrow_date.isoweekday()
 
-    if int(current_hour) < 12:
-        print("Shipment request made the cut-off and will ship today.")
+    count = 0
+    for i in range(4):
+        given_date = today + datetime.timedelta(days=i)
 
-    else:
-        for i in range(4):
-            given_date = today + datetime.timedelta(days=i)
+        if given_date in us_holidays:
+            weekday = given_date.isoweekday()
 
-            if given_date in us_holidays:
-                weekend = given_date.isoweekday()
+            if (
+                today.isoweekday() == 6
+                or today.isoweekday() == 7
+                and is_holidays._is_monday(given_date)
+            ):
+                # return 1
+                print(
+                    f"{str(given_date)} {weekdays[weekday]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[2]}). ***"
+                )
+                break
+            elif (
+                is_holidays._is_monday(given_date)
+                and int(current_hour) < 8
+                and is_holidays._is_friday(today)
+            ):
+                # return 2
+                print("Shipment made today's shipment and will ship today.")
 
-                if is_holidays._is_monday(given_date):
-                    print(
-                        f"{str(given_date)} {weekdays[weekend]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[2]}). ***2"
-                    )
-                    break
-                elif is_holidays._is_friday(given_date):
-                    print(
-                        f"{str(given_date)} {weekdays[weekend]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[1]}). ***3"
-                    )
-                    break
-                elif is_holidays._is_weekend(given_date):
-                    pass
+                break
+            elif (
+                is_holidays._is_monday(given_date)
+                and int(current_hour) > 8
+                and is_holidays._is_friday(today)
+            ):
+                # return 3
+                print(
+                    f"{str(given_date)} {weekdays[weekday]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[2]}). ***"
+                )
+                break
+            elif (
+                is_holidays._is_tuesday(given_date)
+                and int(current_hour) < 12
+                and is_holidays._is_monday(today)
+            ):
+                # return 4
+                print("Shipment made today's shipment and will ship today.")
+                break
+            elif (
+                is_holidays._is_tuesday(given_date)
+                and int(current_hour) > 12
+                and is_holidays._is_monday(today)
+            ):
+                # return 5
+                print(
+                    f"{str(given_date)} {weekdays[weekday]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[3]}). ***"
+                )
+            elif (
+                is_holidays._is_wednesday(given_date)
+                and int(current_hour) < 12
+                and is_holidays._is_tuesday(today)
+            ):
+                #return 6
+                print("Shipment made today's shipment and will ship today.")
+                break
+            elif (
+                is_holidays._is_wednesday(given_date)
+                and int(current_hour) > 12
+                and is_holidays._is_tuesday(today)
+            ):
+                # return 7
+                print(
+                    f"{str(given_date)} {weekdays[weekday]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[4]}). ***"
+                )
+            elif (
+                is_holidays._is_thursday(given_date)
+                and int(current_hour) < 12
+                and is_holidays._is_wednesday(today)
+            ):
+                # return 8
+                print("Shipment made today's shipment and will ship today.")
+                break
+            elif (
+                is_holidays._is_thursday(given_date)
+                and int(current_hour) > 12
+                and is_holidays._is_wednesday(today)
+            ):
+                # return 9
+                print(
+                    f"{str(given_date)} {weekdays[weekday]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[5]}). ***"
+                )
+            elif (
+                is_holidays._is_friday(given_date)
+                and int(current_hour) < 12
+                and is_holidays._is_thursday(today)
+            ):
+                # return 10
+                print("Shipment made today's shipment and will ship today.")
+                break
+            elif (
+                is_holidays._is_friday(given_date)
+                and int(current_hour) > 12
+                and is_holidays._is_thursday(today)
+            ):
+                # return 11
+                print(
+                    f"{str(given_date)} {weekdays[weekday]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[1]}). ***"
+                )
+                break
 
-                else:
-                    next_day = weekend + 1
-                    print(
-                        f"{str(given_date)} {weekdays[weekend]} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[next_day]}). ***4"
-                    )
-                    break
-        if tomorrow_day == 6 or tomorrow_day == 7:
-            print(
-                f"*** Shipment missed shipping time for Friday and will process/ship on Monday, {next_week_date}. ***"
-            )
-
-        elif is_holidays._is_monday(next_week_date):
-            print(
-                f"{str(next_week_date)} *** Shipment may be impacted by a holiday. Shipment will ship the day following the holiday ({weekdays[next_week_day]}). ***1"
-            )
+            else:
+                # return 12
+                print(
+                    "Shipment missed today's cutoff annd will ship the next business day."
+                )
+                break
+        count += 1
+        if count == 4 and int(current_hour) > 12:
+            # return 13
+            print("Shipment missed today's cutoff and will ship the next business day.")
+        elif count == 4 and int(current_hour) < 12:
+            # return 14
+            print("Shipment made today's shipment and will ship today.")
         else:
-            print("Shipment missed today's cutoff and will ship tomorrow.")
+            pass
 
-
-"""
-    else:
-        print("Shipment made today's shipment and will ship today.")
-"""
 if __name__ == "__main__":
     main()
