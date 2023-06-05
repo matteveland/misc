@@ -1,5 +1,7 @@
 import datetime
 import holidays
+import pytz
+
 
 is_holidays = holidays.HolidayBase()
 weekdays = {
@@ -20,17 +22,12 @@ def main():
 
 def shipping_times():
     now = datetime.datetime.now()  # "2023-06-16 15:47:20.799617"
-    current_hour = now.strftime("%H")  # hour  # 14
+    # current_hour = now.strftime("%H")  # hour  # 14
+    eastern = pytz.timezone("US/Eastern")
+    easter_time = now.astimezone(eastern)
+    current_hour = easter_time.strftime("%H")
     today = datetime.date.today()  # today
-    # format = "%Y-%m-%d"
-    # today = datetime.datetime.strptime(today, format)
-
     us_holidays = holidays.country_holidays("US")
-    tomorrow_date = today + datetime.timedelta(days=1)
-
-    tomorrow_day = tomorrow_date.isoweekday()
-    next_week_date = today + datetime.timedelta(days=3)
-    next_week_day = tomorrow_date.isoweekday()
 
     count = 0
     for i in range(4):
@@ -90,7 +87,7 @@ def shipping_times():
                 and int(current_hour) < 12
                 and is_holidays._is_tuesday(today)
             ):
-                #return 6
+                # return 6
                 print("Shipment made today's shipment and will ship today.")
                 break
             elif (
@@ -153,6 +150,7 @@ def shipping_times():
             print("Shipment made today's shipment and will ship today.")
         else:
             pass
+
 
 if __name__ == "__main__":
     main()
