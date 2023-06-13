@@ -4,7 +4,7 @@ import sys
 now = datetime.datetime.now()
 current_hour = now.strftime("%H")
 
-# address format -  10289 Ulmerton Rd,UNIT RIGHT,LARGO,FL 33771,US
+
 
 
 def main():
