@@ -17,7 +17,7 @@ def main():
     # email_template()
 
 
-def email_template(ticket, clli, address, cause):
+def email_template(ticket, device_number, address, cause):
     if "US" in address:
         address = address.split(",")
         street = address[0].strip()
@@ -91,11 +91,11 @@ def email_template(ticket, clli, address, cause):
         time_of_day = "today"
 
     print(
-        f"\n\nSUBJECT LINE == Proactive Monitoring {ticket} || {clli} || {address}\n\n\n{greeting}\n\nOur proactive monitoring system received an alert for the following network device. Ticket {ticket} || {clli} || {address}  was ({cause}) automatically created {time_of_day} as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for four (4) hours verifying there were no additional issues. I will be closing ticket {ticket}, please let me know if you have any questions.\n"
+        f"\n\nSUBJECT LINE == Proactive Monitoring {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nOur proactive monitoring system received an alert for the following network device. Ticket {ticket} || {device_number} || {address}  was ({cause}) automatically created {time_of_day} as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for four (4) hours verifying there were no additional issues. I will be closing ticket {ticket}, please let me know if you have any questions.\n"
     )
 
     print(
-        f"\n\nSUBJECT LINE == Managed Router {ticket} || {clli} || {address}\n\n\n{greeting}\n\nTicket {ticket} Site: {clli} Reason: Hard Down-Self recovered was automatically created {time_of_day} as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for 4 hours ensuring no additional issues. I will be closing ticket {ticket} now, please let me know if you have any questions.\n"
+        f"\n\nSUBJECT LINE == Managed Router {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nTicket {ticket} Site: {device_number} Reason: Hard Down-Self recovered was automatically created {time_of_day} as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for 4 hours ensuring no additional issues. I will be closing ticket {ticket} now, please let me know if you have any questions.\n"
     )
 
 
@@ -111,7 +111,7 @@ def validate_sys_args():
         sys.exit(
             "\nThis requires five (5) CLI argurements, including the file ("
             + sys.argv[0]
-            + " ticket clli address cause). Address requires ' or \" ('address' or \"address\"). The address must also follow the following formatting: Splunk - '10289 stree Rd,UNIT RIGHT,Redlands,FL 90001,US' where the sub adress (Unit is optional -- UNIT RIGHT); BPOM -  '42142 street DR, redlands, CA' with no additional options . The cause also requires ' or \" ('cause' or \"cause\")  (i.e. 'Standard SDWAN - Intermittent Connectivity (Hard Down)')\n"
+            + " ticket device_number address cause). Address requires ' or \" ('address' or \"address\"). The address must also follow the following formatting: Splunk - '10289 stree Rd,UNIT RIGHT,Redlands,FL 90001,US' where the sub adress (Unit is optional -- UNIT RIGHT); BPOM -  '42142 street DR, redlands, CA' with no additional options . The cause also requires ' or \" ('cause' or \"cause\")  (i.e. 'Standard SDWAN - Intermittent Connectivity (Hard Down)')\n"
         )
 
 
