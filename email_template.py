@@ -1,6 +1,5 @@
 import datetime
 import sys
-import argparse
 
 
 now = datetime.datetime.now()
@@ -9,15 +8,30 @@ current_hour = now.strftime("%H")
 # address format -  10289 Street Rd,sub address,City,FL 90001,US
 # whole example -  ticket_code device_number '123 Main Rd, sub address, the city, IL 90001' 'cause type - unplugged'
 
+"""opts = [opt for opt in sys.argv[1:] if opt.startswith("-")]
+args = [arg for arg in sys.argv[1:] if not arg.startswith("-")]"""
+
 
 def main():
     ...
     validate_sys_args()
-    email_template(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+
+    # email_template(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
     # email_template()
+    print(sys.argv[1])
+    if sys.argv[1] == "-a":
+        email_template(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    elif sys.argv[1] == "-s":
+        email_template(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    elif sys.argv[1] == "-m":
+        email_template(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    else:
+        raise SystemExit(
+            f"Usage: {sys.argv[0]} (-a | -s | -m) <arguments>...\n\n-a: Advanced SDWAN\n-s: Standard SDWAN\n-m: Managed Router\n\n"
+        )
 
 
-def email_template(ticket, device_number, address, cause):
+def email_template(type, ticket, device_number, address, cause):
     if "US" in address:
         address = address.split(",")
         street = address[0].strip()
@@ -70,10 +84,10 @@ def email_template(ticket, device_number, address, cause):
             # zip_code = address[3].strip()
             state_zip_split = address[3].split(" ")
             zip_code = state_zip_split[2]
-            print(city + "\n")
+            """            print(city + "\n")
             # print(city2+"\n")
             print(zip_code + "\n")
-            print("there is more to the address")
+            print("there is more to the address")"""
 
         address = street.title() + ", " + city.title() + ", " + zip_code.strip()
 
@@ -90,13 +104,20 @@ def email_template(ticket, device_number, address, cause):
         greeting = "Greetings,"
         time_of_day = "today"
 
-    print(
-        f"\n\nSUBJECT LINE == Proactive Monitoring {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nOur proactive monitoring system received an alert for the following network device. Ticket {ticket} || {device_number} || {address}  was ({cause}) automatically created {time_of_day} as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for four (4) hours verifying there were no additional issues. I will be closing ticket {ticket}, please let me know if you have any questions.\n"
-    )
-
-    print(
-        f"\n\nSUBJECT LINE == Managed Router {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nTicket {ticket} Site: {device_number} Reason: Hard Down-Self recovered was automatically created {time_of_day} as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for 4 hours ensuring no additional issues. I will be closing ticket {ticket} now, please let me know if you have any questions.\n"
-    )
+    if type == "-a":
+        print(
+            f"\n\nSUBJECT LINE == Proactive Monitoring {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nOur proactive monitoring system received an alert for the following network device. Ticket {ticket} || {device_number} || {address}  was (Advanced SDWAN - {cause}) automatically created as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for four (4) hours verifying there were no additional issues. I will be closing ticket {ticket}, please let me know if you have any questions.\n"
+        )
+    elif type == "-s":
+        print(
+            f"\n\nSUBJECT LINE == Proactive Monitoring {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nOur proactive monitoring system received an alert for the following network device. Ticket {ticket} || {device_number} || {address}  was (Standard SDWAN - {cause}) automatically created as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for four (4) hours verifying there were no additional issues. I will be closing ticket {ticket}, please let me know if you have any questions.\n"
+        )
+    elif type == "-m":
+        print(
+            f"\n\nSUBJECT LINE == Managed Router {ticket} || {device_number} || {address}\n\n\n{greeting}\n\nTicket {ticket} Site: {device_number} Reason: Managed Router - {cause} was automatically created as part of proactive monitoring, I ensured your site was connected and continued to monitor the site for 4 hours ensuring no additional issues. I will be closing ticket {ticket} now, please let me know if you have any questions.\n"
+        )
+    else:
+        pass
 
 
 def validate_sys_args():
@@ -104,14 +125,14 @@ def validate_sys_args():
 
     sys_argv_length = len(sys.argv)
 
-    if sys_argv_length == 5:  # too few argvs
-        return sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+    if sys_argv_length == 6:  # too few argvs
+        for _ in sys.argv:
+            print(_)
+        return sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5]
 
     else:
         sys.exit(
-            "\nThis requires five (5) CLI argurements, including the file ("
-            + sys.argv[0]
-            + " ticket device_number address cause). Address requires ' or \" ('address' or \"address\"). The address must also follow the following formatting: Splunk - '10289 stree Rd,UNIT RIGHT,Redlands,FL 90001,US' where the sub adress (Unit is optional -- UNIT RIGHT); BPOM -  '42142 street DR, redlands, CA' with no additional options . The cause also requires ' or \" ('cause' or \"cause\")  (i.e. 'Standard SDWAN - Intermittent Connectivity (Hard Down)')\n"
+            f"\nUsage: {sys.argv[0]} (-a | -s | -m) <arguments>\n\n-a: Advanced SDWAN\n-s: Standard SDWAN\n-m: Managed Router\n\nThis requires five (6) CLI argurements, including the file ({sys.argv[0]}, system type, ticket, device_number, address, and cause). Address requires ' or \" ('address' or \"address\"). The address must also follow the following formatting: Splunk - '10289 stree Rd,UNIT RIGHT,Redlands,FL 90001,US' where the sub adress (Unit is optional -- UNIT RIGHT); BPOM -  '42142 street DR, redlands, CA' with no additional options. The cause also requires ' or \" ('cause' or \"cause\")  (i.e. 'Intermittent Connectivity (Hard Down)')\n\nComplete example: {sys.argv[0]} -m ticket_code device_number '123 Main Rd, sub address, the city, IL 90001' 'cause type - unplugged'\n"
         )
 
 
